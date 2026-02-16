@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Carbon Impact Awareness</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/controls/OrbitControls.js"></script>
+<style>
+:root {
+  --bg: #050810;
+  --card: rgba(255,255,255,0.06);
+  --text: #f1f5f9;
+  --accent: #3b82f6;
+  --danger: #ef4444;
+  --glow: rgba(59,130,246,0.6);
+}
+body.low-carbon { --accent: #22c55e; --glow: rgba(34,197,94,0.6); }
+* { box-sizing: border-box; scroll-behavior: smooth; }
+body { margin:0; font-family:'Inter',sans-serif; background: radial-gradient(circle at 30% 20%, #0f172a, var(--bg)); color: var(--text); overflow-x:hidden; }
+nav { position: fixed; top:0; width:100%; padding:1rem 2rem; display:flex; justify-content:space-between; backdrop-filter: blur(20px); background: rgba(0,0,0,0.5); z-index:1000; }
+nav a { color: var(--text); text-decoration:none; margin-left:1.5rem; font-weight:600; }
+.hero { min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:6rem 2rem; animation: fadeUp 1.2s ease forwards; }
+.hero h1 { font-size:3.8rem; font-weight:800; background: linear-gradient(90deg,#fff,var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.hero p { max-width:650px; opacity:0.8; }
+.section { padding:6rem 2rem; display:flex; justify-content:center; opacity:0; transform:translateY(40px); transition: all 1s ease; }
+.section.visible { opacity:1; transform:translateY(0); }
+.glass { background: var(--card); backdrop-filter: blur(25px); border-radius:28px; padding:3rem; width:100%; max-width:1100px; box-shadow:0 0 50px rgba(0,0,0,0.6); transition: all 0.4s ease; }
+.glass:hover { transform:translateY(-10px); box-shadow:0 0 80px var(--glow); }
+h2 { font-size:2.2rem; font-weight:800; margin-bottom:1rem; }
+input { padding:1rem; border-radius:14px; border:none; margin-bottom:1rem; width:100%; font-size:1rem; }
+button { padding:0.9rem 1.8rem; border-radius:16px; border:none; background:var(--accent); color:white; font-weight:700; cursor:pointer; transition: all 0.3s ease; }
+button:hover { transform:scale(1.08); box-shadow:0 0 25px var(--glow); }
+.stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:2rem; }
+.stat { background: rgba(255,255,255,0.04); padding:2rem; border-radius:20px; text-align:center; transition: transform 0.4s ease; }
+.stat:hover { transform: scale(1.05); }
+.stat h3 { font-size:2.5rem; font-weight:800; color: var(--danger); }
+#globeContainer { width:100%; height:500px; margin-top:2rem; border-radius:20px; overflow:hidden; }
+  .stat h3 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--danger);
+  transition: all 0.35s cubic-bezier(.34,1.56,.64,1);
+}
+
+.stat:hover h3 {
+  transform: scale(1.25) translateY(-8px);
+  text-shadow: 
+    0 0 10px var(--danger),
+    0 0 20px var(--danger),
+    0 0 40px var(--danger);
+}
+
+.carbon { position: fixed; top:-50px; width:30px; opacity:0.6; animation: fall linear infinite; z-index:-1; }
+@keyframes fall { to { transform: translateY(110vh) rotate(360deg);} }
+@keyframes fadeUp { from{opacity:0; transform:translateY(40px);} to{opacity:1; transform:translateY(0);} }
+footer { text-align:center; padding:4rem; opacity:0.5; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div><strong>Carbon Impact</strong></div>
+  <div>
+    <a href="#data">Data</a>
+    <a href="#estimator">Estimator</a>
+    <a href="#globe">Impact</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <h1>The Climate Clock Is Ticking.</h1>
+  <p>Carbon emissions are accelerating global warming. See your impact. Watch the planet respond.</p>
+  <button onclick="toggleMode()">Toggle Low-Carbon Mode</button>
+</section>
+
+<section class="section" id="data">
+  <div class="glass">
+    <h2>Global Reality</h2>
+    <div class="stat-grid">
+      <div class="stat"><h3>+1.2°C</h3><p>Temperature rise</p></div>
+      <div class="stat"><h3>36B+</h3><p>Tons CO₂ yearly</p></div>
+      <div class="stat"><h3>Record</h3><p>Extreme events</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="estimator">
+  <div class="glass">
+    <h2>Carbon Estimator</h2>
+    <input type="number" id="miles" placeholder="Miles driven per week">
+    <input type="number" id="electricity" placeholder="Electricity kWh per month">
+    <input type="number" id="flights" placeholder="Flights per year">
+    <button onclick="calculateCarbon()">Estimate Impact</button>
+    <div id="result"></div>
+  </div>
+</section>
+
+<section class="section" id="globe">
+  <div class="glass">
+    <h2>3D Planet Response</h2>
+    <div id="globeContainer"></div>
+  </div>
+</section>
+
+<footer>Act now. Reduce emissions. Protect the future.</footer>
+
+<script>
+function toggleMode(){ document.body.classList.toggle('low-carbon'); }
+function calculateCarbon(){
+  const m=miles.value||0, e=electricity.value||0, f=flights.value||0;
+  const total=(m*0.404)+(e*0.417)+(f*90);
+  result.innerHTML=`Estimated yearly emissions: <strong>${total.toFixed(1)} kg CO₂</strong>`;
+}
+const sections=document.querySelectorAll('.section');
+window.addEventListener('scroll',()=>{ sections.forEach(sec=>{ const rect=sec.getBoundingClientRect(); if(rect.top<window.innerHeight-100){ sec.classList.add('visible'); } }); });
+
+// 3D Globe with working textures
+window.addEventListener('load',()=>{
+  const container = document.getElementById('globeContainer');
+  const scene = new THREE.Scene();
+
+  const camera = new THREE.PerspectiveCamera(50, container.clientWidth/container.clientHeight, 0.1, 1000);
+  camera.position.z = 5;
+
+  const renderer = new THREE.WebGLRenderer({antialias:true});
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setClearColor(0x000000,1);
+  container.appendChild(renderer.domElement);
+
+  // Lights
+  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+  const directional = new THREE.DirectionalLight(0xffffff, 0.8);
+  directional.position.set(5,3,5);
+  scene.add(directional);
+
+  // Globe texture (CORS-enabled)
+  const globeTexture = new THREE.TextureLoader().setCrossOrigin("anonymous").load(
+    'https://threejsfundamentals.org/threejs/resources/images/earth-day.jpg'
+  );
+  const globeMaterial = new THREE.MeshPhongMaterial({ map: globeTexture });
+  const globe = new THREE.Mesh(new THREE.SphereGeometry(2,64,64), globeMaterial);
+  scene.add(globe);
+
+  // Clouds
+  const cloudTexture = new THREE.TextureLoader().setCrossOrigin("anonymous").load(
+    'https://threejsfundamentals.org/threejs/resources/images/earth-clouds.png'
+  );
+  const cloudMaterial = new THREE.MeshPhongMaterial({
+    map: cloudTexture,
+    transparent: true,
+    opacity: 0.4,
+    depthWrite: false
+  });
+  const clouds = new THREE.Mesh(new THREE.SphereGeometry(2.02,64,64), cloudMaterial);
+  scene.add(clouds);
+
+  // OrbitControls
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.enablePan = false;
+  controls.minDistance = 3;
+  controls.maxDistance = 10;
+
+  // Animate
+  function animate() {
+    requestAnimationFrame(animate);
+    globe.rotation.y += 0.0015;
+    clouds.rotation.y += 0.0018;
+    controls.update();
+    renderer.render(scene,camera);
+  }
+  animate();
+
+  // Handle resize
+  window.addEventListener('resize', ()=>{
+    camera.aspect = container.clientWidth/container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+  });
+});
+
+// Falling carbon
+const carbonURL="https://static.vecteezy.com/system/resources/thumbnails/044/812/757/small/a-solid-piece-of-coal-isolated-on-transparent-background-png.png";
+for(let i=0;i<30;i++){ const img=document.createElement('img'); img.src=carbonURL; img.className='carbon'; img.style.left=Math.random()*100+'vw'; img.style.animationDuration=(6+Math.random()*10)+'s'; img.style.width=(20+Math.random()*25)+'px'; document.body.appendChild(img); }
+</script>
+</body>
+</html>
