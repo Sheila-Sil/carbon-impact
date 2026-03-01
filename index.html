@@ -221,28 +221,49 @@
 
     .bubble-grid {
       display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 1rem;
-      max-width: 480px;
+      max-width: 520px;
+      align-items: center;
     }
 
     .bubble {
-      background: radial-gradient(circle at 35% 25%, rgba(196, 129, 255, 0.85), rgba(35, 9, 54, 0.95));
-      border: 1px solid rgba(219, 164, 255, 0.35);
-      border-radius: 30px;
-      padding: 1.2rem 1.3rem;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+      width: clamp(150px, 16vw, 205px);
+      aspect-ratio: 1;
+      place-self: start;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      text-align: center;
+      padding: 1rem;
+      border-radius: 50%;
+      background: radial-gradient(circle at 32% 26%, rgba(210, 160, 255, 0.92), rgba(72, 20, 120, 0.92) 56%, rgba(9, 5, 16, 0.95));
+      border: 1px solid rgba(219, 164, 255, 0.48);
+      box-shadow:
+        inset -18px -24px 42px rgba(0, 0, 0, 0.48),
+        inset 12px 16px 26px rgba(255, 255, 255, 0.16),
+        0 18px 32px rgba(0, 0, 0, 0.55);
       transform: translateY(calc(var(--offset, 0) * 1px));
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .bubble:hover {
-      transform: translateY(calc(var(--offset, 0) * 1px - 8px)) scale(1.05);
-      box-shadow: 0 15px 38px rgba(186, 100, 255, 0.55);
+      transform: translateY(calc(var(--offset, 0) * 1px - 8px)) scale(1.08);
+      box-shadow:
+        inset -18px -24px 42px rgba(0, 0, 0, 0.42),
+        inset 12px 16px 26px rgba(255, 255, 255, 0.2),
+        0 18px 40px rgba(186, 100, 255, 0.66);
     }
 
     .bubble h3 {
-      font-size: 1rem;
-      margin-bottom: 0.35rem;
+      font-size: 0.92rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .bubble p {
+      font-size: 0.8rem;
+      line-height: 1.3;
+      color: #f4e8ff;
     }
 
     .typed-wrap {
@@ -280,33 +301,6 @@
     .footprint-title:hover {
       transform: translateX(0) scale(1.03);
     }
-
-    .footprint-visual {
-      margin-top: 1.5rem;
-      width: 180px;
-      height: 280px;
-      border: 3px solid rgba(194, 136, 255, 0.8);
-      border-radius: 55% 55% 45% 45% / 70% 70% 35% 35%;
-      position: relative;
-      box-shadow: inset 0 0 22px rgba(186, 100, 255, 0.45), 0 0 30px rgba(106, 49, 173, 0.4);
-      image-rendering: pixelated;
-      background: repeating-linear-gradient(45deg, rgba(186,100,255,0.16) 0 9px, rgba(0,0,0,0.35) 9px 18px);
-    }
-
-    .footprint-visual::before,
-    .footprint-visual::after {
-      content: '';
-      position: absolute;
-      width: 52px;
-      height: 52px;
-      border: 3px solid rgba(194, 136, 255, 0.75);
-      border-radius: 50%;
-      top: -34px;
-      background: rgba(12, 5, 20, 0.8);
-    }
-
-    .footprint-visual::before { left: 12px; }
-    .footprint-visual::after { right: 12px; }
 
     .glass {
       background: rgba(13, 8, 22, 0.82);
@@ -436,7 +430,7 @@
   <section class="footprint-section" id="impact">
     <div>
       <h2 class="footprint-title" id="footprintTitle">How big is your carbon footprint?</h2>
-      <div class="footprint-visual" aria-hidden="true"></div>
+      <p class="hero-copy">Enter your mobility and power usage to estimate yearly emissions. The globe responds in real-time to show how rising personal output thickens atmospheric stress.</p>
     </div>
     <div>
       <div class="glass">
