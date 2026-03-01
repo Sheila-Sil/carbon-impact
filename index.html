@@ -1,622 +1,671 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Carbon Impact Awareness</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/controls/OrbitControls.js"></script>
-<style>
-:root {
-  --bg: #050810;
-  --card: rgba(255,255,255,0.06);
-  --text: #f1f5f9;
-  --accent: #3b82f6;
-  --danger: #ef4444;
-  --glow: rgba(59,130,246,0.6);
-}
-body.low-carbon { --accent: #22c55e; --glow: rgba(34,197,94,0.6); }
-* { box-sizing: border-box; scroll-behavior: smooth; }
-body { margin:0; font-family:'Inter',sans-serif; background: radial-gradient(circle at 30% 20%, #0f172a, var(--bg)); color: var(--text); overflow-x:hidden; }
-nav { position: fixed; top:0; width:100%; padding:1rem 2rem; display:flex; justify-content:space-between; backdrop-filter: blur(20px); background: rgba(0,0,0,0.5); z-index:1000; }
-nav a { color: var(--text); text-decoration:none; margin-left:1.5rem; font-weight:600; }
-.hero { min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:6rem 2rem; animation: fadeUp 1.2s ease forwards; }
-.hero h1 { font-size:3.8rem; font-weight:800; background: linear-gradient(90deg,#fff,var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-.hero p { max-width:650px; opacity:0.8; }
-.section { padding:6rem 2rem; display:flex; justify-content:center; opacity:0; transform:translateY(40px); transition: all 1s ease; }
-.section.visible { opacity:1; transform:translateY(0); }
-.glass { background: var(--card); backdrop-filter: blur(25px); border-radius:28px; padding:3rem; width:100%; max-width:1100px; box-shadow:0 0 50px rgba(0,0,0,0.6); transition: all 0.4s ease; }
-.glass:hover { transform:translateY(-10px); box-shadow:0 0 80px var(--glow); }
-h2 { font-size:2.2rem; font-weight:800; margin-bottom:1rem; }
-input { padding:1rem; border-radius:14px; border:none; margin-bottom:1rem; width:100%; font-size:1rem; }
-button { padding:0.9rem 1.8rem; border-radius:16px; border:none; background:var(--accent); color:white; font-weight:700; cursor:pointer; transition: all 0.3s ease; }
-button:hover { transform:scale(1.08); box-shadow:0 0 25px var(--glow); }
-.stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:2rem; }
-.stat { background: rgba(255,255,255,0.04); padding:2rem; border-radius:20px; text-align:center; transition: transform 0.4s ease; }
-.stat:hover { transform: scale(1.05); }
-.stat h3 { font-size:2.5rem; font-weight:800; color: var(--danger); }
-#globeContainer { width:100%; height:500px; margin-top:2rem; border-radius:20px; overflow:hidden; }
-  .stat h3 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: var(--danger);
-  transition: all 0.35s cubic-bezier(.34,1.56,.64,1);
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Climate Clock Interface</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/controls/OrbitControls.js"></script>
+  <style>
+    :root {
+      --bg: #040106;
+      --panel: #0b0711;
+      --neon: #ba64ff;
+      --neon-soft: #7b38ff;
+      --ink: #e9defd;
+      --black: #000;
+    }
 
-.stat:hover h3 {
-  transform: scale(1.25) translateY(-8px);
-  text-shadow: 
-    0 0 10px var(--danger),
-    0 0 20px var(--danger),
-    0 0 40px var(--danger);
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-.carbon { position: fixed; top:-50px; width:30px; opacity:0.6; animation: fall linear infinite; z-index:-1; }
-@keyframes fall { to { transform: translateY(110vh) rotate(360deg);} }
-@keyframes fadeUp { from{opacity:0; transform:translateY(40px);} to{opacity:1; transform:translateY(0);} }
-footer { text-align:center; padding:4rem; opacity:0.5; }
-/* Tech Stack Badges */
-.tech-tag {
-  display: inline-block;
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  padding: 0.3rem 0.8rem;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  margin: 0.5rem;
-  font-weight: 600;
-}
+    body {
+      font-family: 'Inter', sans-serif;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(122, 56, 255, 0.25), transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(186, 100, 255, 0.2), transparent 45%),
+        var(--bg);
+      color: var(--ink);
+      overflow-x: hidden;
+      line-height: 1.45;
+    }
 
-/* Reflection Section */
-.reflection-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-top: 2rem;
-}
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.92);
+      border-bottom: 1px solid rgba(186, 100, 255, 0.35);
+      display: flex;
+      justify-content: center;
+      gap: 2.2rem;
+      padding: 1rem;
+    }
 
-@media (max-width: 768px) {
-  .reflection-grid { grid-template-columns: 1fr; }
-}
+    .nav-link {
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14rem;
+      position: relative;
+      font-size: 0.9rem;
+      min-width: 112px;
+      text-align: center;
+      display: inline-block;
+    }
 
-.icon-box {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--neon), #fff);
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
 
-/* Link Style */
-.repo-link {
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: 700;
-  border-bottom: 2px solid transparent;
-  transition: 0.3s;
-}
-.repo-link:hover {
-  border-bottom: 2px solid var(--accent);
-}
-  .creator-name {
-  background: linear-gradient(90deg, #fff, var(--accent), #fff);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shine 3s linear infinite;
-}
+    .nav-link:hover::after,
+    .nav-link:focus-visible::after {
+      transform: scaleX(1);
+    }
 
-@keyframes shine {
-  to { background-position: 200% center; }
-}
-  .scroll-container {
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  animation: float 2s ease-in-out infinite; 
-  transition: opacity 0.3s;
-}
+    .hero {
+      min-height: 100vh;
+      padding: 7rem 7vw 2rem;
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      align-items: center;
+      gap: 2rem;
+      position: relative;
+    }
 
-.scroll-container:hover {
-  opacity: 0.8;
-}
+    .pixel-title {
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(1.8rem, 3.6vw, 3.4rem);
+      line-height: 1.4;
+      letter-spacing: 0.07rem;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, #f7f1ff 0%, #bc7cff 45%, #66d3ff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.7);
+      animation: hoverPulse 3s ease-in-out infinite;
+    }
 
-.scroll-text {
-  font-size: 0.8rem;
-  font-weight: 800;
-  letter-spacing: 2px;
-  color: var(--accent);
-  text-shadow: 0 0 10px var(--glow);
-}
+    .hero-copy {
+      max-width: 60ch;
+      margin-top: 1.3rem;
+      color: #c5b5e9;
+    }
 
-.carrot {
-  width: 20px;
-  height: 20px;
-  border-bottom: 3px solid white;
-  border-right: 3px solid white;
-  transform: rotate(45deg); 
-  margin-top: 5px;
-}
+    .clock-wrap {
+      display: flex;
+      justify-content: center;
+    }
 
-/* The Hover Animation Logic */
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0px); }
-}
-  .narrative {
-  min-height: 60vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 4rem 2rem;
-}
+    .clock3d {
+      position: relative;
+      width: min(330px, 65vw);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #261233, #040106 62%);
+      border: 4px solid rgba(186, 100, 255, 0.7);
+      box-shadow:
+        inset 0 0 35px rgba(186, 100, 255, 0.5),
+        0 18px 45px rgba(0, 0, 0, 0.8);
+      transform-style: preserve-3d;
+      transition: transform 0.22s linear;
+    }
 
-.narrative-content {
-  max-width: 900px;
-}
+    .clock3d::before {
+      content: '';
+      position: absolute;
+      inset: 8%;
+      border: 2px dashed rgba(255, 255, 255, 0.18);
+      border-radius: 50%;
+      transform: translateZ(25px);
+    }
 
-.narrative h2 {
-  font-size: 2.8rem;
-  margin-bottom: 1rem;
-}
+    .hand {
+      position: absolute;
+      left: 50%;
+      bottom: 50%;
+      transform-origin: bottom;
+      transform: translateX(-50%);
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(186, 100, 255, 0.75);
+    }
 
-.narrative p {
-  font-size: 1.2rem;
-  opacity: 0.75;
-  line-height: 1.6;
-}
-.full-globe {
-  flex-direction: column;
-  padding: 6rem 0;
-}
+    .hand.hour {
+      width: 8px;
+      height: 25%;
+      background: linear-gradient(180deg, #d5b0ff, #5f2ea3);
+    }
 
-#globeContainer {
-  width: 100%;
-  height: 600px;
-  margin-top: 2rem;
-  border-radius: 0;
-}
-.side-panel {
-  position: fixed;
-  top: 40%;
-  left: -200px; 
-  width: 240px;
-  display: flex;
-  align-items: center;
-  transition: 0.5s ease;
-  z-index: 999;
-}
+    .hand.minute {
+      width: 6px;
+      height: 36%;
+      background: linear-gradient(180deg, #f8d6ff, #7836d8);
+    }
+
+    .hub {
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 14px var(--neon);
+    }
+
+    .separator {
+      border-top: 1px solid rgba(186, 100, 255, 0.5);
+      border-bottom: 1px solid rgba(186, 100, 255, 0.5);
+      background: #09040f;
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 0.7rem 0;
+    }
+
+    .marquee {
+      display: inline-block;
+      padding-left: 100%;
+      font-family: 'Press Start 2P', cursive;
+      color: #d6a4ff;
+      font-size: 0.8rem;
+      animation: belt 16s linear infinite;
+    }
+
+    .ocean {
+      position: relative;
+      overflow: hidden;
+      min-height: 90vh;
+      padding: 4.5rem 7vw;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: center;
+      background: linear-gradient(180deg, #12081f 0%, #090312 55%, #05010b 100%);
+    }
+
+    .waves,
+    .waves::before,
+    .waves::after {
+      content: '';
+      position: absolute;
+      left: -10%;
+      width: 120%;
+      height: 190px;
+      border-radius: 46%;
+      background: radial-gradient(circle at 50% 20%, rgba(204, 124, 255, 0.35), rgba(70, 24, 118, 0.9));
+      animation: waveShift 11s linear infinite;
+      pointer-events: none;
+    }
+
+    .waves { top: -115px; opacity: 0.7; }
+    .waves::before { top: 34px; animation-duration: 14s; opacity: 0.7; }
+    .waves::after { top: 68px; animation-duration: 18s; opacity: 0.55; }
+
+    .bubble-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      max-width: 260px;
+      align-items: start;
+    }
+
+    .bubble {
+      width: clamp(150px, 16vw, 205px);
+      aspect-ratio: 1;
+      place-self: start;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      text-align: center;
+      padding: 1rem;
+      border-radius: 50%;
+      background: radial-gradient(circle at 32% 26%, rgba(210, 160, 255, 0.92), rgba(72, 20, 120, 0.92) 56%, rgba(9, 5, 16, 0.95));
+      border: 1px solid rgba(219, 164, 255, 0.48);
+      box-shadow:
+        inset -18px -24px 42px rgba(0, 0, 0, 0.48),
+        inset 12px 16px 26px rgba(255, 255, 255, 0.16),
+        0 18px 32px rgba(0, 0, 0, 0.55);
+      transform: translateY(calc(var(--offset, 0) * 1px));
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .bubble:hover {
+      transform: translateY(calc(var(--offset, 0) * 1px - 8px)) scale(1.08);
+      box-shadow:
+        inset -18px -24px 42px rgba(0, 0, 0, 0.42),
+        inset 12px 16px 26px rgba(255, 255, 255, 0.2),
+        0 18px 40px rgba(186, 100, 255, 0.66);
+    }
+
+    .bubble h3 {
+      font-size: 0.92rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .bubble p {
+      font-size: 0.8rem;
+      line-height: 1.3;
+      color: #f4e8ff;
+    }
+
+    .typed-wrap {
+      font-size: clamp(1rem, 1.7vw, 1.3rem);
+      max-width: 52ch;
+      min-height: 180px;
+      border-left: 3px solid rgba(214, 164, 255, 0.7);
+      padding-left: 1rem;
+      color: #dcc6ff;
+    }
+
+    .footprint-section {
+      min-height: 100vh;
+      padding: 6rem 7vw;
+      display: grid;
+      gap: 2rem;
+      grid-template-columns: 1.1fr 1fr;
+      align-items: start;
+    }
+
+    .footprint-title {
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(1.1rem, 2.4vw, 2rem);
+      line-height: 1.6;
+      transform: translateX(-120px);
+      opacity: 0;
+      transition: transform 0.9s ease, opacity 0.9s ease;
+    }
+
+    .footprint-title.show {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    .footprint-title:hover {
+      transform: translateX(0) scale(1.03);
+    }
+
+    .glass {
+      background: rgba(13, 8, 22, 0.82);
+      border: 1px solid rgba(214, 164, 255, 0.4);
+      backdrop-filter: blur(10px);
+      padding: 1.4rem;
+      border-radius: 18px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55);
+      margin-bottom: 1.3rem;
+    }
+
+    .glass label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-size: 0.9rem;
+    }
+
+    .glass input {
+      width: 100%;
+      margin-bottom: 0.9rem;
+      padding: 0.72rem;
+      border-radius: 10px;
+      border: 1px solid rgba(225, 191, 255, 0.25);
+      background: rgba(0, 0, 0, 0.35);
+      color: #f4eaff;
+    }
+
+    .glass button {
+      width: 100%;
+      border: 0;
+      padding: 0.8rem;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--neon-soft), var(--neon));
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .estimate {
+      margin-top: 0.8rem;
+      color: #f3dcff;
+      font-weight: 700;
+      min-height: 1.4rem;
+    }
+
+    #globeContainer {
+      width: 100%;
+      height: 390px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(225, 191, 255, 0.25);
+      background: radial-gradient(circle at 40% 30%, #160a23, #05010b 70%);
+    }
+
+    @keyframes hoverPulse {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-14px); }
+    }
+
+    @keyframes belt {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    @keyframes waveShift {
+      from { transform: translateX(0); }
+      to { transform: translateX(-25%); }
+    }
 
 
-.side-panel.open {
-  left: 0; /* Slides in */
-}
+    .scroll-cue {
+      position: absolute;
+      right: 3vw;
+      bottom: 2rem;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      border: 1px solid rgba(216, 175, 255, 0.55);
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle, rgba(39, 16, 66, 0.8), rgba(7, 2, 14, 0.8));
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), inset 0 0 22px rgba(193, 124, 255, 0.2);
+      overflow: hidden;
+      text-decoration: none;
+      color: #f0dcff;
+      z-index: 4;
+    }
 
-.panel-content {
-  background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(15px);
-  padding: 1.2rem;
-  border-radius: 0 15px 15px 0;
-  border: 1px solid rgba(255,255,255,0.1);
-  width: 200px;
-}
+    .scroll-cue .ring-text {
+      position: absolute;
+      inset: 10px;
+      border-radius: 50%;
+      animation: spinRing 10s linear infinite;
+      font-size: 0.46rem;
+      letter-spacing: 0.08rem;
+      text-transform: uppercase;
+      display: block;
+      font-weight: 700;
+    }
 
-.panel-toggle {
-  background: var(--accent);
-  color: white;
-  padding: 1rem 0.6rem;
-  cursor: pointer;
-  border-radius: 0 10px 10px 0;
-  font-weight: bold;
-  transition: 0.3s;
-  user-select: none;
-}
+    .scroll-cue .ring-text span {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform-origin: 0 44px;
+      color: #e8cbff;
+    }
 
-.panel-toggle:hover {
-  box-shadow: 0 0 20px var(--glow);
-}
+    .scroll-cue .arrow {
+      font-size: 1.7rem;
+      text-shadow: 0 0 12px rgba(186, 100, 255, 0.8);
+      animation: arrowPulse 1.8s ease-in-out infinite;
+    }
 
-.side-panel.open .panel-toggle {
-  transform: rotate(180deg);
-}
+    @keyframes spinRing {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
 
-.zoom-controls {
-  position: absolute;
-  right: 30px;
-  top: 120px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  z-index: 10;
-}
+    @keyframes arrowPulse {
+      0%, 100% { transform: translateY(0); opacity: 0.9; }
+      50% { transform: translateY(6px); opacity: 1; }
+    }
 
-#zoomControls button {
-  width: 40px;
-  height: 40px;
-  font-size: 22px;
-  cursor: pointer;
+    @media (max-width: 980px) {
+      .hero,
+      .ocean,
+      .footprint-section {
+        grid-template-columns: 1fr;
+      }
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 0;
-  line-height: 1;
-}
-
-.zoom-controls button:hover {
-  background: var(--accent);
-  color: white;
-  box-shadow: 0 0 25px var(--glow);
-  transform: scale(1.1);
-}
-  #scroll-belt-section .scroll-belt-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start; /* left align */
-}
-
-.scroll-belt {
-  overflow: hidden;            /* hides spilling text */
-  width: 100%;                 /* full container width */
-  position: relative;
-  border-radius: 20px;
-}
-
-.belt-inner {
-  display: flex;
-  white-space: nowrap;
-  animation: scrollBelt 25s linear infinite;
-}
-
-.belt-inner span {
-  display: inline-block;
-  padding-right: 3rem;
-}
-
-@keyframes scrollBelt {
-  0% { transform: translateX(100%); }   
-  100% { transform: translateX(-100%); } 
-}
-
-@media (max-width: 768px) {
-  .belt-inner span { padding-right: 1.5rem; }
-}
+      .clock-wrap { order: -1; }
+      nav { gap: 1.2rem; }
+      .nav-link { min-width: 90px; font-size: 0.75rem; }
+      .scroll-cue {
+        width: 108px;
+        height: 108px;
+        right: 1rem;
+      }
+      .scroll-cue .ring-text span {
+        transform-origin: 0 36px;
+      }
+    }
   </style>
 </head>
 <body>
+  <nav>
+    <a href="#hero" class="nav-link" data-text="Overview">Overview</a>
+    <a href="#stats" class="nav-link" data-text="Statistics">Statistics</a>
+    <a href="#impact" class="nav-link" data-text="Impact Lab">Impact Lab</a>
+  </nav>
 
-<nav>
-  <div><strong>Carbon Impact</strong></div>
-  <div>
-    <a href="#data">Data</a>
-    <a href="#estimator">Estimator</a>
-    <a href="#globe">Impact</a>
-
-  </div>
-</nav>
-
-<section class="hero">
-  <h1 id="glitch-title">The Climate Clock Is Ticking.</h1>
-  <p>Carbon emissions are accelerating global warming. See your impact. Watch the planet respond.</p>
-  <button onclick="toggleMode()" style="margin-bottom: 2rem;">Toggle Low-Carbon Mode</button>
-  
-  <div class="scroll-container" onclick="scrollToEstimator()">
-    <span class="scroll-text">GET STARTED</span>
-    <div class="carrot"></div>
-  </div>
-</section>
-<section class="section narrative" id="narrative">
-  <div class="narrative-content">
-    <h2>What Happens If We Do Nothing?</h2>
-    <p>
-      By 2050, sea levels could displace millions. Heatwaves intensify. 
-      Ecosystems collapse. The climate clock isn't symbolic — it’s measurable.
-    </p>
-  </div>
-</section>
-<div class="side-panel" id="sidePanel">
-  <div class="panel-content">
-    <h4>417 ppm CO₂</h4>
-    <p>Highest atmospheric concentration in human history.</p>
-  </div>
-  <div class="panel-toggle" onclick="togglePanel()">
-    ➤
-  </div>
-</div>
-
-
-<section class="section" id="data">
-  <div class="glass">
-    <h2>Global Reality</h2>
-    <div class="stat-grid">
-      <div class="stat"><h3>+1.2°C</h3><p>Temperature rise</p></div>
-      <div class="stat"><h3>36B+</h3><p>Tons CO₂ yearly</p></div>
-      <div class="stat"><h3>Record</h3><p>Extreme events</p></div>
+  <section class="hero" id="hero">
+    <div>
+      <h1 class="pixel-title">The Climate Clock is Ticking</h1>
+      <p class="hero-copy">Our systems are accelerating, and so is atmospheric pressure. Scroll to explore the global reality and estimate your own carbon influence in a futuristic dashboard.</p>
     </div>
-  </div>
-</section>
-
-<section class="section" id="estimator">
-  <div class="glass">
-    <h2>Carbon Estimator</h2>
-    <input type="number" id="miles" placeholder="Miles driven per week">
-    <input type="number" id="electricity" placeholder="Electricity kWh per month">
-    <input type="number" id="flights" placeholder="Flights per year">
-    <button onclick="calculateCarbon()">Estimate Impact</button>
-    
-    <div id="result-box" style="display:none; margin-top:2rem; padding:1.5rem; background:rgba(0,0,0,0.3); border-radius:15px;">
-        <div id="status-badge" style="display:inline-block; padding:5px 15px; border-radius:20px; font-weight:800; margin-bottom:10px;"></div>
-        <div id="result-text" style="font-size:1.5rem; font-weight:700;"></div>
-        <div style="width:100%; height:10px; background:rgba(255,255,255,0.1); border-radius:5px; margin:10px 0;">
-            <div id="progress-bar" style="height:100%; width:0%; transition:1s ease; border-radius:5px;"></div>
-        </div>
-        <p id="impact-desc" style="opacity:0.7; font-size:0.9rem;"></p>
-    </div>
-  </div>
-</section>
-
-<section class="section full-globe" id="globe">
-  <h2 style="text-align:center;">3D Planet Response</h2>
-  <div class="zoom-controls">
-  <button onclick="zoomIn()">+</button>
-  <button onclick="zoomOut()">−</button>
-</div>
-  <div id="globeContainer"></div>
-</section>
-<section class="section" id="scroll-belt-section">
-  <div class="glass scroll-belt-container">
-    <h2>Climate Facts</h2>
-    <div class="scroll-belt">
-      <div class="belt-inner" id="scrollBelt">
-        <span>🌍 Over 8 million tons of CO₂ are emitted daily — </span>
-        <span>🔥 2023 was one of the hottest years on record — </span>
-        <span>🌱 Planting trees can absorb 2.6 billion tons of CO₂ annually — </span>
-        <span>⚡ Renewable energy is growing but still <20% of global supply — </span>
-        <span>🌊 Oceans absorb 30% of CO₂ but acidification is rising — </span>
+    <div class="clock-wrap">
+      <div class="clock3d" id="clock3d" aria-label="3D climate clock">
+        <div class="hand hour" id="hourHand"></div>
+        <div class="hand minute" id="minuteHand"></div>
+        <div class="hub"></div>
       </div>
     </div>
+    <a class="scroll-cue" href="#stats" aria-label="Scroll down to statistics">
+      <span class="ring-text" id="ringText"></span>
+      <span class="arrow">↓</span>
+    </a>
+  </section>
+
+  <div class="separator">
+    <div class="marquee">STATISTICS &amp; GLOBAL REALITY — STATISTICS &amp; GLOBAL REALITY — STATISTICS &amp; GLOBAL REALITY —</div>
   </div>
-</section>
-<section class="section" id="tech">
-  <div class="glass">
-    <h2>Project Blueprint</h2>
-    <p style="opacity:0.7; margin-bottom:2rem;">Built for impact using modern web technologies to visualize real-time climate data.</p>
-    
-    <div style="margin-bottom: 2rem;">
-      <span class="tech-tag">Three.js (WebGL)</span>
-      <span class="tech-tag">JavaScript ES6</span>
-      <span class="tech-tag">HTML5/CSS3</span>
-      <span class="tech-tag">OrbitControls</span>
-      <span class="tech-tag">Google Fonts</span>
+
+  <section class="ocean" id="stats">
+    <div class="waves"></div>
+    <div class="bubble-grid">
+      <article class="bubble">
+        <h3>36.8B tons CO₂ yearly</h3>
+        <p>Global fossil fuel emissions remain near record highs, compounding heatwaves and drought instability.</p>
+      </article>
+      <article class="bubble">
+        <h3>1.2°C warming above baseline</h3>
+        <p>Current average warming is already amplifying extreme weather and stressing food and water systems.</p>
+      </article>
+      <article class="bubble">
+        <h3>+93% climate disasters since 1980</h3>
+        <p>Flood, wildfire, and storm events are intensifying with major social and economic consequences.</p>
+      </article>
     </div>
- <div style="font-weight:800; color:var(--accent); font-size:1.2rem;">Sheila Sil</div>
-    <p style="opacity:0.5; font-size:0.8rem;">Lead Developer & Designer</p>
-    <br>
-    <a href="https://github.com/Sheila-Sil/carbon-impact" class="repo-link">View Code Repository →</a>
-</section>
+    <div class="typed-wrap" id="typedText"></div>
+  </section>
 
-<footer>Act now. Reduce emissions. Protect the future.</footer>
+  <section class="footprint-section" id="impact">
+    <div>
+      <h2 class="footprint-title" id="footprintTitle">How big is your carbon footprint?</h2>
+      <p class="hero-copy">Enter your mobility and power usage to estimate yearly emissions. The globe responds in real-time to show how rising personal output thickens atmospheric stress.</p>
+    </div>
+    <div>
+      <div class="glass">
+        <label for="miles">Miles driven per week</label>
+        <input type="number" id="miles" min="0" placeholder="e.g. 120" />
 
-<script>
-// global var so function can acess
-let globe, clouds, heatMesh, carbonParticles;
-let camera;
+        <label for="electricity">Electricity (kWh per month)</label>
+        <input type="number" id="electricity" min="0" placeholder="e.g. 400" />
 
-function toggleMode() { 
-    document.body.classList.toggle('low-carbon'); 
-}
+        <label for="flights">Flights per year</label>
+        <input type="number" id="flights" min="0" placeholder="e.g. 3" />
 
-function calculateCarbon() {
-    const m = document.getElementById('miles').value || 0;
-    const e = document.getElementById('electricity').value || 0;
-    const f = document.getElementById('flights').value || 0;
-    
-    const total = (m * 0.404) + (e * 0.417) + (f * 90);
-    const resultBox = document.getElementById('result-box');
-    const badge = document.getElementById('status-badge');
-    const progressBar = document.getElementById('progress-bar');
-    const resultDisplay = document.getElementById('result-text');
-    
-    resultBox.style.display = 'block';
+        <button id="estimateBtn">Estimate Impact</button>
+        <div class="estimate" id="estimateResult"></div>
+      </div>
+      <div id="globeContainer"></div>
+    </div>
+  </section>
 
-    let startValue = 0;
-    let duration = 1000; // 1 second
-    let startTime = null;
+  <script>
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&*';
+    document.querySelectorAll('.nav-link').forEach((link) => {
+      let interval;
+      link.addEventListener('mouseenter', () => {
+        let iteration = 0;
+        const original = link.dataset.text;
+        clearInterval(interval);
+        interval = setInterval(() => {
+          link.textContent = original
+            .split('')
+            .map((ch, i) => (i < iteration ? original[i] : alphabet[Math.floor(Math.random() * alphabet.length)]))
+            .join('');
+          iteration += 1 / 2;
+          if (iteration >= original.length) {
+            clearInterval(interval);
+            link.textContent = original;
+          }
+        }, 36);
+      });
+      link.addEventListener('mouseleave', () => {
+        clearInterval(interval);
+        link.textContent = link.dataset.text;
+      });
+    });
 
-    function animateNumber(timestamp) {
-        if (!startTime) startTime = timestamp;
-        const progress = Math.min((timestamp - startTime) / duration, 1);
-        const currentValue = Math.floor(progress * total);
-        resultDisplay.innerHTML = `${currentValue.toLocaleString()} kg CO₂ / year`;
-        if (progress < 1) {
-            requestAnimationFrame(animateNumber);
-        }
+    const ringText = document.getElementById('ringText');
+    const cueText = ' SCROLL DOWN • SCROLL DOWN • ';
+    cueText.split('').forEach((char, i) => {
+      const span = document.createElement('span');
+      span.textContent = char;
+      span.style.transform = `rotate(${i * 12}deg)`;
+      ringText.appendChild(span);
+    });
+
+    const hourHand = document.getElementById('hourHand');
+    const minuteHand = document.getElementById('minuteHand');
+    const clock3d = document.getElementById('clock3d');
+    const bubbles = document.querySelectorAll('.bubble');
+    const footprintTitle = document.getElementById('footprintTitle');
+
+    window.addEventListener('scroll', () => {
+      const maxScroll = document.body.scrollHeight - window.innerHeight;
+      const progress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+
+      const hourDeg = progress * 720;
+      const minuteDeg = progress * 3600;
+      hourHand.style.transform = `translateX(-50%) rotate(${hourDeg}deg)`;
+      minuteHand.style.transform = `translateX(-50%) rotate(${minuteDeg}deg)`;
+
+      const scale = 1 + progress * 0.45;
+      clock3d.style.transform = `rotateX(${progress * 24}deg) rotateY(${progress * 30}deg) scale(${scale})`;
+
+      bubbles.forEach((bubble, index) => {
+        const offset = Math.max(0, window.scrollY - document.getElementById('stats').offsetTop) * (0.06 + index * 0.02);
+        bubble.style.setProperty('--offset', `${-offset}`);
+      });
+
+      const titleTrigger = footprintTitle.getBoundingClientRect().top;
+      if (titleTrigger < window.innerHeight * 0.8) {
+        footprintTitle.classList.add('show');
+      }
+    });
+
+    const message = 'The atmosphere is loaded by cumulative emissions: transportation, power generation, and aviation all add long-lived greenhouse gases. Real-time adaptation demands immediate reduction, cleaner grids, and lower-carbon mobility choices.';
+    const typedText = document.getElementById('typedText');
+    let pointer = 0;
+    function typeMessage() {
+      if (pointer < message.length) {
+        typedText.textContent += message.charAt(pointer);
+        pointer += 1;
+        setTimeout(typeMessage, 25);
+      }
     }
-    requestAnimationFrame(animateNumber);
-    // ----------------------------------
+    typeMessage();
 
-    let color, label, desc, percent;
-    if (total < 2000) {
-        color = '#22c55e'; label = 'Sustainable'; percent = 20;
-        desc = "Your footprint is within manageable levels for planetary renewal.";
-    } else if (total < 8000) {
-        color = '#f59e0b'; label = 'Moderate'; percent = 55;
-        desc = "Your emissions exceed the per-capita target for 2030 goals.";
-    } else {
-        color = '#ef4444'; label = 'Critical'; percent = 95;
-        desc = "High impact. This level of consumption accelerates rapid warming.";
-    }
-
-    badge.style.background = color;
-    badge.innerText = label;
-    progressBar.style.backgroundColor = color;
-    progressBar.style.width = percent + '%';
-    document.getElementById('impact-desc').innerText = desc;
-
-    // Update 3D Visuals
-    const intensity = Math.min(total / 15000, 1.0);
-    if (heatMesh && carbonParticles) {
-        heatMesh.material.opacity = intensity * 0.7;
-        carbonParticles.material.opacity = 0.1 + (intensity * 0.6);
-    }
-}
-const sections = document.querySelectorAll('.section');
-window.addEventListener('scroll', () => { 
-    sections.forEach(sec => { 
-        const rect = sec.getBoundingClientRect(); 
-        if (rect.top < window.innerHeight - 100) { 
-            sec.classList.add('visible'); 
-        } 
-    }); 
-});
-
-window.addEventListener('load', () => {
+    let globe, glowLayer, smog;
+    let camera;
     const container = document.getElementById('globeContainer');
     const scene = new THREE.Scene();
-
-    camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
-    camera.position.z = 6;
+    camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.z = 5;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
     container.appendChild(renderer.domElement);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-    const directional = new THREE.DirectionalLight(0xffffff, 1);
-    directional.position.set(5, 3, 5);
-    scene.add(directional);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.85));
+    const dir = new THREE.DirectionalLight(0xffffff, 1);
+    dir.position.set(5, 3, 4);
+    scene.add(dir);
 
     const loader = new THREE.TextureLoader();
-
-    // base globe
-    const globeTexture = loader.load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_atmos_2048.jpg');
-    const globeMaterial = new THREE.MeshPhongMaterial({ map: globeTexture, shininess: 5 });
-    globe = new THREE.Mesh(new THREE.SphereGeometry(2, 64, 64), globeMaterial);
+    const tex = loader.load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_atmos_2048.jpg');
+    globe = new THREE.Mesh(new THREE.SphereGeometry(1.55, 64, 64), new THREE.MeshPhongMaterial({ map: tex }));
     scene.add(globe);
 
-    // the glow heat
-    const heatMaterial = new THREE.MeshBasicMaterial({ color: 0xff4400, transparent: true, opacity: 0 });
-    heatMesh = new THREE.Mesh(new THREE.SphereGeometry(2.01, 64, 64), heatMaterial);
-    scene.add(heatMesh);
+    glowLayer = new THREE.Mesh(
+      new THREE.SphereGeometry(1.62, 64, 64),
+      new THREE.MeshBasicMaterial({ color: 0xff44dd, transparent: true, opacity: 0.1 })
+    );
+    scene.add(glowLayer);
 
-    // Clouds Layer
-    const cloudTexture = loader.load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_clouds_1024.png');
-    const cloudMaterial = new THREE.MeshPhongMaterial({ map: cloudTexture, transparent: true, opacity: 0.4, depthWrite: false });
-    clouds = new THREE.Mesh(new THREE.SphereGeometry(2.05, 64, 64), cloudMaterial);
-    scene.add(clouds);
-
-    // carbon Particle Smog
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particleCount = 1500;
-    const posArray = new Float32Array(particleCount * 3);
-
-    for(let i = 0; i < particleCount * 3; i++) {
-        // Distribute particles in a sphere around the globe
-        posArray[i] = (Math.random() - 0.5) * 7; 
+    const pointsGeo = new THREE.BufferGeometry();
+    const count = 1300;
+    const positions = new Float32Array(count * 3);
+    for (let i = 0; i < count * 3; i++) {
+      positions[i] = (Math.random() - 0.5) * 5;
     }
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-    
-    const particlesMaterial = new THREE.PointsMaterial({
-        size: 0.02,
-        color: 0x555555,
-        transparent: true,
-        opacity: 0.1 // Starts as faint smog
-    });
+    pointsGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    smog = new THREE.Points(pointsGeo, new THREE.PointsMaterial({ color: 0x9d59ff, size: 0.02, transparent: true, opacity: 0.08 }));
+    scene.add(smog);
 
-    carbonParticles = new THREE.Points(particlesGeometry, particlesMaterial);
-    scene.add(carbonParticles);
-
-    // Controls
-   const controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.enableZoom = false;  // disables scroll zoom
-controls.enablePan = false;   // optional but cleaner
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.enableZoom = false;
+    controls.enablePan = false;
 
     function animate() {
-        requestAnimationFrame(animate);
-        globe.rotation.y += 0.001;
-        clouds.rotation.y += 0.0012;
-        carbonParticles.rotation.y -= 0.0005; // Smog rotates opposite way
-        controls.update();
-        renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+      globe.rotation.y += 0.0013;
+      glowLayer.rotation.y += 0.0017;
+      smog.rotation.y -= 0.0008;
+      controls.update();
+      renderer.render(scene, camera);
     }
     animate();
 
     window.addEventListener('resize', () => {
-        camera.aspect = container.clientWidth / container.clientHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(container.clientWidth, container.clientHeight);
-    
-    
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
     });
-});
 
-// bg falling coal effect
-const carbonURL = "https://static.vecteezy.com/system/resources/thumbnails/044/812/757/small/a-solid-piece-of-coal-isolated-on-transparent-background-png.png";
-for (let i = 0; i < 20; i++) { 
-    const img = document.createElement('img'); 
-    img.src = carbonURL; 
-    img.className = 'carbon'; 
-    img.style.left = Math.random() * 100 + 'vw'; 
-    img.style.animationDuration = (8 + Math.random() * 10) + 's'; 
-    img.style.width = (15 + Math.random() * 20) + 'px'; 
-    document.body.appendChild(img); 
-}
-function scrollToEstimator() {
-    document.getElementById('narrative').scrollIntoView({
-        behavior: 'smooth'
+    document.getElementById('estimateBtn').addEventListener('click', () => {
+      const miles = Number(document.getElementById('miles').value) || 0;
+      const electricity = Number(document.getElementById('electricity').value) || 0;
+      const flights = Number(document.getElementById('flights').value) || 0;
+
+      const tons = miles * 0.000404 * 52 + electricity * 0.000387 * 12 + flights * 0.24;
+      document.getElementById('estimateResult').textContent = `Estimated annual impact: ${tons.toFixed(2)} metric tons CO₂e`;
+
+      const intensity = Math.min(1, tons / 25);
+      glowLayer.material.opacity = 0.08 + intensity * 0.65;
+      smog.material.opacity = 0.06 + intensity * 0.35;
+      smog.material.size = 0.02 + intensity * 0.04;
     });
-}
-  window.addEventListener('scroll', () => {
-    const scrollIndicator = document.querySelector('.scroll-container');
-    if (window.scrollY > 100) {
-        scrollIndicator.style.opacity = "0";
-        scrollIndicator.style.pointerEvents = "none";
-    } else {
-        scrollIndicator.style.opacity = "1";
-        scrollIndicator.style.pointerEvents = "auto";
-    }
-});
-  function togglePanel() {
-  document.getElementById("sidePanel").classList.toggle("open");
-}
-function zoomIn() {
-  smoothZoom(-0.7);
-}
-
-function zoomOut() {
-  smoothZoom(0.7);
-}
-
-function smoothZoom(amount) {
-  let target = camera.position.z + amount;
-
-  target = Math.max(3, Math.min(10, target));
-
-  const start = camera.position.z;
-  const duration = 300;
-  let startTime = null;
-
-  function animateZoom(timestamp) {
-    if (!startTime) startTime = timestamp;
-    const progress = Math.min((timestamp - startTime) / duration, 1);
-
-    camera.position.z = start + (target - start) * progress;
-
-    if (progress < 1) {
-      requestAnimationFrame(animateZoom);
-    }
-  }
-
-  requestAnimationFrame(animateZoom);
-}
-const belt = document.getElementById('scrollBelt');
-belt.innerHTML += belt.innerHTML;
   </script>
 </body>
-  </html>
+</html>
