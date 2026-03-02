@@ -224,7 +224,7 @@
     .waves::before { 
       top: 30px; 
       animation-duration: 13s; 
-      animation-direction: reverse; /* Moves in opposite direction for depth */
+      animation-direction: reverse; 
       opacity: 0.5; 
     }
 
@@ -308,7 +308,6 @@
       opacity: 1;
     }
 
-    /* Styles for the new typing instruction text */
     .footprint-instructions {
       font-size: 1.1rem;
       color: #c5b5e9;
@@ -394,7 +393,6 @@
       nav { gap: 1.2rem; }
       .nav-link { min-width: 90px; font-size: 0.75rem; }
     }
-  /* Container for the toggle */
 .toggle-wrap {
   display: flex;
   align-items: center;
@@ -406,7 +404,6 @@
   text-transform: uppercase;
 }
 
-/* The switch container */
 .switch {
   position: relative;
   display: inline-block;
@@ -414,10 +411,8 @@
   height: 22px;
 }
 
-/* Hide default checkbox */
 .switch input { opacity: 0; width: 0; height: 0; }
 
-/* The slider track */
 .slider {
   position: absolute;
   cursor: pointer;
@@ -428,7 +423,6 @@
   border: 1px solid var(--neon);
 }
 
-/* The sliding circle */
 .slider:before {
   position: absolute;
   content: "";
@@ -442,14 +436,12 @@
 input:checked + .slider { background-color: var(--neon-soft); }
 input:checked + .slider:before { transform: translateX(20px); }
 
-/* Class added to body to dim the UI */
 body.low-carbon {
   --bg: #020103;
   --neon: #6a3d8b;
   --ink: #a596bd;
   filter: brightness(0.8);
 }
-  /* Benchmark Grid Styling */
 .benchmark-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -479,14 +471,13 @@ body.low-carbon {
   color: #fff;
 }
 
-/* 3D Performance Optimization for Low Carbon Mode */
 body.low-carbon .clock3d, 
 body.low-carbon .pixel-title {
-  animation-duration: 8s !important; /* Slow down CSS animations */
+  animation-duration: 8s !important; 
 }
 
 body.low-carbon .waves {
-  opacity: 0.15; /* Save rendering transparency work */
+  opacity: 0.15; 
 }
 .gauge-container {
   animation: fadeIn 0.5s ease-out;
@@ -784,7 +775,6 @@ body.low-carbon .waves {
     const footprintTitle = document.getElementById('footprintTitle');
     const footprintInstructions = document.getElementById('footprintInstructions');
 
-    // Instruction message
     const instructionMsg = "Enter your weekly mileage, monthly energy usage, and annual flights. Our algorithm will calculate your metric tonnage and visualize the atmospheric load on the simulation globe.";
     let instPointer = 0;
     let instStarted = false;
@@ -817,7 +807,6 @@ body.low-carbon .waves {
       const titleTrigger = footprintTitle.getBoundingClientRect().top;
       if (titleTrigger < window.innerHeight * 0.8) {
         footprintTitle.classList.add('show');
-        // Trigger the instructions typing only once
         if(!instStarted) {
             instStarted = true;
             typeInstructions();
@@ -881,13 +870,16 @@ body.low-carbon .waves {
     controls.enablePan = false;
 
     function animate() {
-      requestAnimationFrame(animate);
-      globe.rotation.y += 0.0013;
-      glowLayer.rotation.y += 0.0017;
-      smog.rotation.y -= 0.0008;
-      controls.update();
-      renderer.render(scene, camera);
-    }
+  requestAnimationFrame(animate);
+    const speedMultiplier = document.getElementById('carbonToggle').checked ? 0.3 : 1.0;
+
+  globe.rotation.y += 0.0013 * speedMultiplier;
+  glowLayer.rotation.y += 0.0017 * speedMultiplier;
+  smog.rotation.y -= 0.0008 * speedMultiplier;
+  
+  controls.update();
+  renderer.render(scene, camera);
+}
     animate();
 
     window.addEventListener('resize', () => {
@@ -900,21 +892,18 @@ document.getElementById('estimateBtn').addEventListener('click', () => {
   const electricity = Number(document.getElementById('electricity').value) || 0;
   const flights = Number(document.getElementById('flights').value) || 0;
 
-  // Calculate Tons
   const tons = (miles * 0.000404 * 52) + (electricity * 0.000387 * 12) + (flights * 0.24);
   
-  // Show the UI elements
   document.getElementById('estimateResult').textContent = `Estimated annual impact: ${tons.toFixed(2)} metric tons CO₂e`;
   const gaugeCont = document.getElementById('gaugeContainer');
   gaugeCont.style.display = 'block';
 
-  // Calculate Bar Percentage (Relative to a 20-ton "Heavy" scale)
+
   const maxScale = 20; 
   const percentage = Math.min((tons / maxScale) * 100, 100);
   const fill = document.getElementById('gaugeFill');
   fill.style.width = `${percentage}%`;
 
-  // Dynamic Feedback Logic
   const status = document.getElementById('statusText');
   const message = document.getElementById('feedbackMessage');
   
@@ -937,7 +926,6 @@ document.getElementById('estimateBtn').addEventListener('click', () => {
 
   document.getElementById('percentageText').textContent = `${Math.round(percentage)}% LOAD`;
 
-  // Globe Visual Updates
   const intensity = Math.min(1, tons / 25);
   glowLayer.material.opacity = 0.08 + intensity * 0.65;
   smog.material.opacity = 0.06 + intensity * 0.35;
@@ -948,44 +936,15 @@ document.getElementById('estimateBtn').addEventListener('click', () => {
 carbonToggle.addEventListener('change', () => {
   if (carbonToggle.checked) {
     document.body.classList.add('low-carbon');
-    // Optional: Slow down Three.js rotations if you have them
     console.log("Low Carbon Mode: Active");
   } else {
     document.body.classList.remove('low-carbon');
     console.log("Low Carbon Mode: Inactive");
   }
 });
-  function simulateAPIFetch() {
-    const intensityVal = document.getElementById('intensityValue');
-    const intensityFill = document.getElementById('intensityFill');
-    const gridTip = document.getElementById('gridTip');
-    
-    // Simulate a value between 50 (very clean) and 600 (very dirty)
-    const randomIntensity = Math.floor(Math.random() * 550) + 50;
-    
-    intensityVal.innerHTML = `${randomIntensity} <span class="unit">gCO₂/kWh</span>`;
-    
-    // Update bar width and color
-    const percent = Math.min((randomIntensity / 600) * 100, 100);
-    intensityFill.style.width = `${percent}%`;
-    
-    if (randomIntensity < 200) {
-        intensityFill.style.background = "#00ff88";
-        gridTip.textContent = "Grid is highly renewable. Perfect time for energy-intensive tasks.";
-    } else if (randomIntensity < 400) {
-        intensityFill.style.background = "#ffcc00";
-        gridTip.textContent = "Grid is using mixed sources. Use moderate caution.";
-    } else {
-        intensityFill.style.background = "#ff4444";
-        gridTip.textContent = "Grid is carbon-heavy (Fossil Fuels). Delay high-energy usage if possible.";
-    }
-}
-
-// Run once on load
-simulateAPIFetch();
- // Replace 'YOUR_API_KEY' with your actual key from co2signal.com
-const API_KEY = 'YOUR_API_KEY'; 
-const COUNTRY_CODE = 'US'; // You can also use 'GB', 'FR', 'DK', etc.
+// API Configuration
+const API_KEY = 'C2uGNhpemIS5ZOAk3J42'; 
+const ZONE = 'US'; 
 
 async function fetchLiveGridData() {
     const intensityVal = document.getElementById('intensityValue');
@@ -993,55 +952,61 @@ async function fetchLiveGridData() {
     const gridTip = document.getElementById('gridTip');
 
     try {
-        // Fetching real-time carbon intensity
-        const response = await fetch(`https://api.co2signal.com/v1/latest?countryCode=${COUNTRY_CODE}`, {
-            headers: { 'auth-token': API_KEY }
+        const response = await fetch(`https://api.electricitymaps.com/v3/carbon-intensity/latest?zone=${ZONE}`, {
+            method: 'GET',
+            headers: {
+                'auth-token': API_KEY
+            }
         });
-        
+
+        if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
         const data = await response.json();
+        
         const intensity = Math.round(data.carbonIntensity);
 
-        // Update UI with real data
         intensityVal.innerHTML = `${intensity} <span class="unit">gCO₂/kWh</span>`;
         
-        // Calculate Bar Visuals
         const percent = Math.min((intensity / 700) * 100, 100);
         intensityFill.style.width = `${percent}%`;
 
-        // Logic-based Recommendations
-        if (intensity < 150) {
-            updateUI("#00ff88", "Grid is exceptionally clean. Maximize energy usage now.", "OPTIMAL");
-        } else if (intensity < 400) {
-            updateUI("#ffcc00", "Moderate emissions. Typical energy usage is fine.", "MODERATE");
+        let color, message, statusText;
+
+        if (intensity < 200) {
+            color = "#00ff88"; // Neon Green
+            message = "Grid is powered by renewables. High-energy tasks are optimized.";
+            statusText = "OPTIMAL";
+        } else if (intensity < 450) {
+            color = "#ffcc00"; // Caution Yellow
+            message = "Mixed grid sources. Standard efficiency protocols active.";
+            statusText = "MODERATE";
         } else {
-            updateUI("#ff4444", "High fossil fuel usage. Postpone heavy loads.", "DELAY");
+            color = "#ff4444"; // Alert Red
+            message = "High carbon intensity detected. Postpone heavy loads.";
+            statusText = "DELAY";
         }
 
+        // Apply visual updates
+        intensityFill.style.background = color;
+        intensityFill.style.boxShadow = `0 0 15px ${color}`;
+        gridTip.textContent = message;
+
+        // Update the table statuses in the second card
+        document.querySelectorAll('.status-good, .status-warn').forEach(el => {
+            el.textContent = statusText;
+            el.style.color = color;
+        });
+
     } catch (error) {
-        console.error("API Error:", error);
+        console.error("Grid API Error:", error);
+        // Fallback UI 
         intensityVal.innerText = "OFFLINE";
-        gridTip.innerText = "Unable to reach grid sensors. Using cached estimates.";
+        gridTip.innerText = "Reconnecting to global grid sensors...";
+        gridTip.style.color = "#ff4444";
     }
 }
-
-function updateUI(color, tip, status) {
-    const fill = document.getElementById('intensityFill');
-    fill.style.background = color;
-    fill.style.boxShadow = `0 0 15px ${color}`;
-    document.getElementById('gridTip').textContent = tip;
-    
-    // Update the Optimization Table statuses
-    document.querySelectorAll('.status-good, .status-warn').forEach(el => {
-        el.textContent = status;
-        el.style.color = color;
-    });
-}
-
-// Initial call
 fetchLiveGridData();
-// Auto-refresh every 15 minutes (to be respectful of API limits)
-setInterval(fetchLiveGridData, 900000);
- 
+setInterval(fetchLiveGridData, 300000);
   </script>
 </body>
 </html>
