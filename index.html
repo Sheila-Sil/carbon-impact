@@ -201,23 +201,53 @@
       background: linear-gradient(180deg, #12081f 0%, #090312 55%, #05010b 100%);
     }
 
-    .waves,
+   .waves,
     .waves::before,
     .waves::after {
       content: '';
       position: absolute;
-      left: -10%;
-      width: 120%;
-      height: 190px;
-      border-radius: 46%;
-      background: radial-gradient(circle at 50% 20%, rgba(204, 124, 255, 0.35), rgba(70, 24, 118, 0.9));
-      animation: waveShift 11s linear infinite;
+      left: -150%; 
+      width: 400%; 
+      height: 250px;
+      border-radius: 43%; 
+      background: radial-gradient(circle at 50% 20%, rgba(204, 124, 255, 0.4), rgba(70, 24, 118, 0.9));
+      animation: waveComplex 10s infinite ease-in-out;
       pointer-events: none;
+      transform-origin: 50% 48%;
     }
 
-    .waves { top: -115px; opacity: 0.7; }
-    .waves::before { top: 34px; animation-duration: 14s; opacity: 0.7; }
-    .waves::after { top: 68px; animation-duration: 18s; opacity: 0.55; }
+    .waves { 
+      top: -150px; 
+      opacity: 0.6; 
+    }
+
+    .waves::before { 
+      top: 30px; 
+      animation-duration: 13s; 
+      animation-direction: reverse; /* Moves in opposite direction for depth */
+      opacity: 0.5; 
+    }
+
+    .waves::after { 
+      top: 70px; 
+      animation-duration: 17s; 
+      opacity: 0.4; 
+    }
+
+    @keyframes waveComplex {
+      0% {
+        transform: translateX(0) translateY(0) rotate(0deg);
+      }
+      33% {
+        transform: translateX(5%) translateY(-15px) rotate(2deg);
+      }
+      66% {
+        transform: translateX(-3%) translateY(10px) rotate(-1deg);
+      }
+      100% {
+        transform: translateX(0) translateY(0) rotate(0deg);
+      }
+    }
 
     .bubble-grid {
       display: grid;
