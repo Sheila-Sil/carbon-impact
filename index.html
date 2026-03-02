@@ -319,33 +319,7 @@
       min-height: 100px;
     }
 
-    .footprint-visual {
-      margin-top: 1.5rem;
-      width: 180px;
-      height: 280px;
-      border: 3px solid rgba(194, 136, 255, 0.8);
-      border-radius: 55% 55% 45% 45% / 70% 70% 35% 35%;
-      position: relative;
-      box-shadow: inset 0 0 22px rgba(186, 100, 255, 0.45), 0 0 30px rgba(106, 49, 173, 0.4);
-      image-rendering: pixelated;
-      background: repeating-linear-gradient(45deg, rgba(186,100,255,0.16) 0 9px, rgba(0,0,0,0.35) 9px 18px);
-    }
-
-    .footprint-visual::before,
-    .footprint-visual::after {
-      content: '';
-      position: absolute;
-      width: 52px;
-      height: 52px;
-      border: 3px solid rgba(194, 136, 255, 0.75);
-      border-radius: 50%;
-      top: -34px;
-      background: rgba(12, 5, 20, 0.8);
-    }
-
-    .footprint-visual::before { left: 12px; }
-    .footprint-visual::after { right: 12px; }
-
+    
     .glass {
       background: rgba(13, 8, 22, 0.82);
       border: 1px solid rgba(214, 164, 255, 0.4);
@@ -420,6 +394,227 @@
       nav { gap: 1.2rem; }
       .nav-link { min-width: 90px; font-size: 0.75rem; }
     }
+  /* Container for the toggle */
+.toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--neon);
+  text-transform: uppercase;
+}
+
+/* The switch container */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 22px;
+}
+
+/* Hide default checkbox */
+.switch input { opacity: 0; width: 0; height: 0; }
+
+/* The slider track */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #221233;
+  transition: 0.4s;
+  border-radius: 34px;
+  border: 1px solid var(--neon);
+}
+
+/* The sliding circle */
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px; width: 14px;
+  left: 4px; bottom: 3px;
+  background-color: var(--ink);
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider { background-color: var(--neon-soft); }
+input:checked + .slider:before { transform: translateX(20px); }
+
+/* Class added to body to dim the UI */
+body.low-carbon {
+  --bg: #020103;
+  --neon: #6a3d8b;
+  --ink: #a596bd;
+  filter: brightness(0.8);
+}
+  /* Benchmark Grid Styling */
+.benchmark-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.bench-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(186, 100, 255, 0.2);
+  padding: 0.8rem;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.bench-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: #a596bd;
+  margin-bottom: 0.3rem;
+}
+
+.bench-value {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+/* 3D Performance Optimization for Low Carbon Mode */
+body.low-carbon .clock3d, 
+body.low-carbon .pixel-title {
+  animation-duration: 8s !important; /* Slow down CSS animations */
+}
+
+body.low-carbon .waves {
+  opacity: 0.15; /* Save rendering transparency work */
+}
+.gauge-container {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.gauge-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  font-family: 'Press Start 2P', cursive;
+  margin-bottom: 0.6rem;
+  color: var(--neon);
+}
+
+.gauge-track {
+  width: 100%;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(186, 100, 255, 0.3);
+}
+
+.gauge-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #00f2ff, var(--neon));
+  box-shadow: 0 0 15px var(--neon);
+  transition: width 1.5s cubic-bezier(0.17, 0.67, 0.83, 0.67), background 1s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+  .live-grid-section {
+  padding: 6rem 7vw;
+  background: linear-gradient(180deg, #05010b 0%, #0b0711 100%);
+  border-top: 1px solid rgba(186, 100, 255, 0.2);
+}
+
+.grid-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.status-pulse {
+  width: 12px;
+  height: 12px;
+  background: #00ff88;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #00ff88;
+  animation: pulse 1.5s infinite;
+}
+
+.live-tag {
+  font-family: 'Press Start 2P';
+  font-size: 0.6rem;
+  color: #00ff88;
+  letter-spacing: 2px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.grid-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.big-stat {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin: 1rem 0;
+  color: #fff;
+}
+
+.big-stat .unit { font-size: 1rem; color: var(--neon); }
+
+.intensity-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+  margin: 1.5rem 0;
+}
+
+.intensity-fill {
+  height: 100%;
+  width: 40%;
+  background: #00ff88;
+  box-shadow: 0 0 15px #00ff88;
+  transition: all 1s ease;
+}
+
+.grid-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.grid-table td {
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.9rem;
+}
+
+.status-good { color: #00ff88; font-weight: 700; text-align: right; }
+.status-warn { color: #ffcc00; font-weight: 700; text-align: right; }
+
+.api-refresh {
+  margin-top: 1.5rem;
+  background: transparent !important;
+  border: 1px solid var(--neon) !important;
+  font-size: 0.7rem;
+  font-family: 'Press Start 2P';
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}
   </style>
 </head>
 <body>
@@ -427,6 +622,14 @@
     <a href="#hero" class="nav-link" data-text="Overview">Overview</a>
     <a href="#stats" class="nav-link" data-text="Statistics">Statistics</a>
     <a href="#impact" class="nav-link" data-text="Impact Lab">Impact Lab</a>
+
+<div class="toggle-wrap">
+  <span>Low Carbon</span>
+  <label class="switch">
+    <input type="checkbox" id="carbonToggle">
+    <span class="slider"></span>
+  </label>
+</div>
   </nav>
 
   <section class="hero" id="hero">
@@ -467,10 +670,32 @@
   </section>
 
   <section class="footprint-section" id="impact">
-    <div>
-      <h2 class="footprint-title" id="footprintTitle">How big is your carbon footprint?</h2>
-      <div class="footprint-instructions" id="footprintInstructions"></div>
+   <div>
+  <h2 class="footprint-title" id="footprintTitle">How big is your carbon footprint?</h2>
+  <div class="footprint-instructions" id="footprintInstructions"></div>
+
+  <div class="benchmarks">
+    <h3 style="font-family: 'Press Start 2P'; font-size: 0.7rem; color: var(--neon); margin: 2rem 0 1rem;">Global Benchmarks</h3>
+    <div class="benchmark-grid">
+      <div class="bench-item">
+        <span class="bench-label">World Average</span>
+        <span class="bench-value">4.7 Tons</span>
+      </div>
+      <div class="bench-item">
+        <span class="bench-label">USA Average</span>
+        <span class="bench-value">16.0 Tons</span>
+      </div>
+      <div class="bench-item">
+        <span class="bench-label">EU Average</span>
+        <span class="bench-value">6.4 Tons</span>
+      </div>
+      <div class="bench-item" style="border: 1px solid var(--neon); background: rgba(186, 100, 255, 0.1);">
+        <span class="bench-label">Climate Goal</span>
+        <span class="bench-value">2.0 Tons</span>
+      </div>
     </div>
+  </div>
+  </div>
     <div>
       <div class="glass">
         <label for="miles">Miles driven per week</label>
@@ -484,11 +709,48 @@
 
         <button id="estimateBtn">Estimate Impact</button>
         <div class="estimate" id="estimateResult"></div>
+      <div class="estimate" id="estimateResult"></div>
+
+<div class="gauge-container" id="gaugeContainer" style="display: none; margin-top: 1.5rem;">
+  <div class="gauge-label">
+    <span id="statusText">System Status: Nominal</span>
+    <span id="percentageText">0% of Goal</span>
+  </div>
+  <div class="gauge-track">
+    <div class="gauge-fill" id="gaugeFill"></div>
+  </div>
+  <p id="feedbackMessage" style="font-size: 0.8rem; margin-top: 0.8rem; color: #a596bd; line-height: 1.4;"></p>
+</div>
       </div>
       <div id="globeContainer"></div>
     </div>
   </section>
+<section class="live-grid-section" id="live-grid">
+  <div class="grid-header">
+    <h2 class="pixel-title" style="font-size: 1.5rem;">Live Grid Intelligence</h2>
+    <div class="status-pulse"></div>
+    <span class="live-tag">LIVE FEED</span>
+  </div>
 
+  <div class="grid-container">
+    <div class="glass grid-card">
+      <div class="card-label">Current Carbon Intensity</div>
+      <div class="big-stat" id="intensityValue">240 <span class="unit">gCO₂/kWh</span></div>
+      <div class="intensity-bar"><div class="intensity-fill" id="intensityFill"></div></div>
+      <p class="grid-tip" id="gridTip">Grid is moderately clean. Optimal time for high-energy tasks.</p>
+    </div>
+
+    <div class="glass grid-card">
+      <div class="card-label">Optimization Schedule</div>
+      <table class="grid-table">
+        <tr><td>EV Charging</td><td class="status-good">OPTIMAL</td></tr>
+        <tr><td>Heavy Appliances</td><td class="status-warn">DELAY</td></tr>
+        <tr><td>Data Processing</td><td class="status-good">OPTIMAL</td></tr>
+      </table>
+      <button class="api-refresh" onclick="simulateAPIFetch()">Refresh Local Data</button>
+    </div>
+  </div>
+</section>
   <script>
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&*';
     document.querySelectorAll('.nav-link').forEach((link) => {
@@ -633,20 +895,94 @@
       camera.updateProjectionMatrix();
       renderer.setSize(container.clientWidth, container.clientHeight);
     });
+document.getElementById('estimateBtn').addEventListener('click', () => {
+  const miles = Number(document.getElementById('miles').value) || 0;
+  const electricity = Number(document.getElementById('electricity').value) || 0;
+  const flights = Number(document.getElementById('flights').value) || 0;
 
-    document.getElementById('estimateBtn').addEventListener('click', () => {
-      const miles = Number(document.getElementById('miles').value) || 0;
-      const electricity = Number(document.getElementById('electricity').value) || 0;
-      const flights = Number(document.getElementById('flights').value) || 0;
+  // Calculate Tons
+  const tons = (miles * 0.000404 * 52) + (electricity * 0.000387 * 12) + (flights * 0.24);
+  
+  // Show the UI elements
+  document.getElementById('estimateResult').textContent = `Estimated annual impact: ${tons.toFixed(2)} metric tons CO₂e`;
+  const gaugeCont = document.getElementById('gaugeContainer');
+  gaugeCont.style.display = 'block';
 
-      const tons = miles * 0.000404 * 52 + electricity * 0.000387 * 12 + flights * 0.24;
-      document.getElementById('estimateResult').textContent = `Estimated annual impact: ${tons.toFixed(2)} metric tons CO₂e`;
+  // Calculate Bar Percentage (Relative to a 20-ton "Heavy" scale)
+  const maxScale = 20; 
+  const percentage = Math.min((tons / maxScale) * 100, 100);
+  const fill = document.getElementById('gaugeFill');
+  fill.style.width = `${percentage}%`;
 
-      const intensity = Math.min(1, tons / 25);
-      glowLayer.material.opacity = 0.08 + intensity * 0.65;
-      smog.material.opacity = 0.06 + intensity * 0.35;
-      smog.material.size = 0.02 + intensity * 0.04;
-    });
+  // Dynamic Feedback Logic
+  const status = document.getElementById('statusText');
+  const message = document.getElementById('feedbackMessage');
+  
+  if (tons <= 2.0) {
+    status.textContent = "STATUS: GUARDIAN";
+    status.style.color = "#00f2ff";
+    fill.style.background = "#00f2ff";
+    message.textContent = "Your footprint is within the 2.0t climate goal. You are actively minimizing atmospheric load.";
+  } else if (tons <= 10) {
+    status.textContent = "STATUS: NEUTRALIST";
+    status.style.color = "#ba64ff";
+    fill.style.background = "#ba64ff";
+    message.textContent = "You are currently above the sustainable limit, but below the industrial average. Optimization recommended.";
+  } else {
+    status.textContent = "STATUS: CRITICAL";
+    status.style.color = "#ff4444";
+    fill.style.background = "#ff4444";
+    message.textContent = "High atmospheric load detected. Significant lifestyle adjustments or high-quality offsets are required to stabilize your impact.";
+  }
+
+  document.getElementById('percentageText').textContent = `${Math.round(percentage)}% LOAD`;
+
+  // Globe Visual Updates
+  const intensity = Math.min(1, tons / 25);
+  glowLayer.material.opacity = 0.08 + intensity * 0.65;
+  smog.material.opacity = 0.06 + intensity * 0.35;
+});
+     
+  const carbonToggle = document.getElementById('carbonToggle');
+
+carbonToggle.addEventListener('change', () => {
+  if (carbonToggle.checked) {
+    document.body.classList.add('low-carbon');
+    // Optional: Slow down Three.js rotations if you have them
+    console.log("Low Carbon Mode: Active");
+  } else {
+    document.body.classList.remove('low-carbon');
+    console.log("Low Carbon Mode: Inactive");
+  }
+});
+  function simulateAPIFetch() {
+    const intensityVal = document.getElementById('intensityValue');
+    const intensityFill = document.getElementById('intensityFill');
+    const gridTip = document.getElementById('gridTip');
+    
+    // Simulate a value between 50 (very clean) and 600 (very dirty)
+    const randomIntensity = Math.floor(Math.random() * 550) + 50;
+    
+    intensityVal.innerHTML = `${randomIntensity} <span class="unit">gCO₂/kWh</span>`;
+    
+    // Update bar width and color
+    const percent = Math.min((randomIntensity / 600) * 100, 100);
+    intensityFill.style.width = `${percent}%`;
+    
+    if (randomIntensity < 200) {
+        intensityFill.style.background = "#00ff88";
+        gridTip.textContent = "Grid is highly renewable. Perfect time for energy-intensive tasks.";
+    } else if (randomIntensity < 400) {
+        intensityFill.style.background = "#ffcc00";
+        gridTip.textContent = "Grid is using mixed sources. Use moderate caution.";
+    } else {
+        intensityFill.style.background = "#ff4444";
+        gridTip.textContent = "Grid is carbon-heavy (Fossil Fuels). Delay high-energy usage if possible.";
+    }
+}
+
+// Run once on load
+simulateAPIFetch();
   </script>
 </body>
 </html>
