@@ -300,6 +300,7 @@
       transform: translateX(-120px);
       opacity: 0;
       transition: transform 0.9s ease, opacity 0.9s ease;
+      margin-bottom: 2rem;
     }
 
     .footprint-title.show {
@@ -307,8 +308,15 @@
       opacity: 1;
     }
 
-    .footprint-title:hover {
-      transform: translateX(0) scale(1.03);
+    /* Styles for the new typing instruction text */
+    .footprint-instructions {
+      font-size: 1.1rem;
+      color: #c5b5e9;
+      max-width: 40ch;
+      line-height: 1.6;
+      border-left: 2px solid var(--neon);
+      padding-left: 1.5rem;
+      min-height: 100px;
     }
 
     .footprint-visual {
@@ -401,11 +409,6 @@
       100% { transform: translateX(-100%); }
     }
 
-    @keyframes waveShift {
-      from { transform: translateX(0); }
-      to { transform: translateX(-25%); }
-    }
-
     @media (max-width: 980px) {
       .hero,
       .ocean,
@@ -466,6 +469,7 @@
   <section class="footprint-section" id="impact">
     <div>
       <h2 class="footprint-title" id="footprintTitle">How big is your carbon footprint?</h2>
+      <div class="footprint-instructions" id="footprintInstructions"></div>
     </div>
     <div>
       <div class="glass">
@@ -516,6 +520,20 @@
     const clock3d = document.getElementById('clock3d');
     const bubbles = document.querySelectorAll('.bubble');
     const footprintTitle = document.getElementById('footprintTitle');
+    const footprintInstructions = document.getElementById('footprintInstructions');
+
+    // Instruction message
+    const instructionMsg = "Enter your weekly mileage, monthly energy usage, and annual flights. Our algorithm will calculate your metric tonnage and visualize the atmospheric load on the simulation globe.";
+    let instPointer = 0;
+    let instStarted = false;
+
+    function typeInstructions() {
+      if (instPointer < instructionMsg.length) {
+        footprintInstructions.textContent += instructionMsg.charAt(instPointer);
+        instPointer++;
+        setTimeout(typeInstructions, 30);
+      }
+    }
 
     window.addEventListener('scroll', () => {
       const maxScroll = document.body.scrollHeight - window.innerHeight;
@@ -537,6 +555,11 @@
       const titleTrigger = footprintTitle.getBoundingClientRect().top;
       if (titleTrigger < window.innerHeight * 0.8) {
         footprintTitle.classList.add('show');
+        // Trigger the instructions typing only once
+        if(!instStarted) {
+            instStarted = true;
+            typeInstructions();
+        }
       }
     });
 
