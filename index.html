@@ -983,6 +983,65 @@ carbonToggle.addEventListener('change', () => {
 
 // Run once on load
 simulateAPIFetch();
+ // Replace 'YOUR_API_KEY' with your actual key from co2signal.com
+const API_KEY = 'YOUR_API_KEY'; 
+const COUNTRY_CODE = 'US'; // You can also use 'GB', 'FR', 'DK', etc.
+
+async function fetchLiveGridData() {
+    const intensityVal = document.getElementById('intensityValue');
+    const intensityFill = document.getElementById('intensityFill');
+    const gridTip = document.getElementById('gridTip');
+
+    try {
+        // Fetching real-time carbon intensity
+        const response = await fetch(`https://api.co2signal.com/v1/latest?countryCode=${COUNTRY_CODE}`, {
+            headers: { 'auth-token': API_KEY }
+        });
+        
+        const data = await response.json();
+        const intensity = Math.round(data.carbonIntensity);
+
+        // Update UI with real data
+        intensityVal.innerHTML = `${intensity} <span class="unit">gCO₂/kWh</span>`;
+        
+        // Calculate Bar Visuals
+        const percent = Math.min((intensity / 700) * 100, 100);
+        intensityFill.style.width = `${percent}%`;
+
+        // Logic-based Recommendations
+        if (intensity < 150) {
+            updateUI("#00ff88", "Grid is exceptionally clean. Maximize energy usage now.", "OPTIMAL");
+        } else if (intensity < 400) {
+            updateUI("#ffcc00", "Moderate emissions. Typical energy usage is fine.", "MODERATE");
+        } else {
+            updateUI("#ff4444", "High fossil fuel usage. Postpone heavy loads.", "DELAY");
+        }
+
+    } catch (error) {
+        console.error("API Error:", error);
+        intensityVal.innerText = "OFFLINE";
+        gridTip.innerText = "Unable to reach grid sensors. Using cached estimates.";
+    }
+}
+
+function updateUI(color, tip, status) {
+    const fill = document.getElementById('intensityFill');
+    fill.style.background = color;
+    fill.style.boxShadow = `0 0 15px ${color}`;
+    document.getElementById('gridTip').textContent = tip;
+    
+    // Update the Optimization Table statuses
+    document.querySelectorAll('.status-good, .status-warn').forEach(el => {
+        el.textContent = status;
+        el.style.color = color;
+    });
+}
+
+// Initial call
+fetchLiveGridData();
+// Auto-refresh every 15 minutes (to be respectful of API limits)
+setInterval(fetchLiveGridData, 900000);
+ 
   </script>
 </body>
 </html>
