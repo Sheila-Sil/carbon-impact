@@ -224,7 +224,7 @@
     .waves::before { 
       top: 30px; 
       animation-duration: 13s; 
-      animation-direction: reverse; 
+      animation-direction: reverse; /* Moves in opposite direction for depth */
       opacity: 0.5; 
     }
 
@@ -308,6 +308,7 @@
       opacity: 1;
     }
 
+    /* Styles for the new typing instruction text */
     .footprint-instructions {
       font-size: 1.1rem;
       color: #c5b5e9;
@@ -382,49 +383,18 @@
       100% { transform: translateX(-100%); }
     }
 
-  @media (max-width: 980px) {
+    @media (max-width: 980px) {
+      .hero,
+      .ocean,
+      .footprint-section {
+        grid-template-columns: 1fr;
+      }
 
-  .hero,
-  .ocean,
-  .footprint-section {
-    grid-template-columns: 1fr;
-  }
-
-  .clock-wrap { order: -1; }
-  nav { gap: 1.2rem; }
-  .nav-link { min-width: 90px; font-size: 0.75rem; }
-
-  /* smaller scroll indicator on mobile */
-  .scroll-indicator {
-    bottom: 20px;
-    right: 20px;
-  }
-
-  .scroll-text-container {
-    width: 80px;
-    height: 80px;
-  }
-
-  .rotating-text text {
-    font-size: 7px;
-    letter-spacing: 1px;
-  }
-
-  .arrow-down svg {
-    width: 14px;
-    height: 14px;
-  }
-
-  /* fix Live Grid layout on mobile */
-  .grid-container {
-    grid-template-columns: 1fr;
-  }
-
-  .big-stat {
-    font-size: 2.3rem;
-  }
-
-}
+      .clock-wrap { order: -1; }
+      nav { gap: 1.2rem; }
+      .nav-link { min-width: 90px; font-size: 0.75rem; }
+    }
+  /* Container for the toggle */
 .toggle-wrap {
   display: flex;
   align-items: center;
@@ -436,6 +406,7 @@
   text-transform: uppercase;
 }
 
+/* The switch container */
 .switch {
   position: relative;
   display: inline-block;
@@ -443,8 +414,10 @@
   height: 22px;
 }
 
+/* Hide default checkbox */
 .switch input { opacity: 0; width: 0; height: 0; }
 
+/* The slider track */
 .slider {
   position: absolute;
   cursor: pointer;
@@ -455,6 +428,7 @@
   border: 1px solid var(--neon);
 }
 
+/* The sliding circle */
 .slider:before {
   position: absolute;
   content: "";
@@ -468,12 +442,14 @@
 input:checked + .slider { background-color: var(--neon-soft); }
 input:checked + .slider:before { transform: translateX(20px); }
 
+/* Class added to body to dim the UI */
 body.low-carbon {
   --bg: #020103;
   --neon: #6a3d8b;
   --ink: #a596bd;
   filter: brightness(0.8);
 }
+  /* Benchmark Grid Styling */
 .benchmark-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -503,13 +479,14 @@ body.low-carbon {
   color: #fff;
 }
 
+/* 3D Performance Optimization for Low Carbon Mode */
 body.low-carbon .clock3d, 
 body.low-carbon .pixel-title {
-  animation-duration: 8s !important; 
+  animation-duration: 8s !important; /* Slow down CSS animations */
 }
 
 body.low-carbon .waves {
-  opacity: 0.15; 
+  opacity: 0.15; /* Save rendering transparency work */
 }
 .gauge-container {
   animation: fadeIn 0.5s ease-out;
@@ -593,36 +570,7 @@ body.low-carbon .waves {
 }
 
 .big-stat .unit { font-size: 1rem; color: var(--neon); }
- .scroll-indicator {
-    bottom: 20px;
-    right: 20px;
-  }
 
-  .scroll-text-container {
-    width: 80px;
-    height: 80px;
-  }
-
-  .rotating-text text {
-    font-size: 7px;
-    letter-spacing: 1px;
-  }
-
-  .arrow-down svg {
-    width: 14px;
-    height: 14px;
-  }
-
-  /* fix Live Grid Intelligence layout */
-  .grid-container {
-    grid-template-columns: 1fr;
-  }
-
-  .big-stat {
-    font-size: 2.3rem;
-  }
-
-}
 .intensity-bar {
   width: 100%;
   height: 6px;
@@ -710,6 +658,97 @@ body.low-carbon .waves {
 @keyframes bounceArrow {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(5px); }
+}
+    /* ---------- MOBILE OPTIMIZATION ---------- */
+@media (max-width: 700px) {
+
+  nav {
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding: 0.7rem;
+  }
+
+  .nav-link {
+    font-size: 0.65rem;
+    min-width: auto;
+  }
+
+  .toggle-wrap {
+    width: 100%;
+    justify-content: center;
+    margin-top: 0.4rem;
+  }
+
+  .hero {
+    padding: 6rem 5vw 2rem;
+    gap: 1.5rem;
+  }
+
+  .hero-copy {
+    font-size: 0.9rem;
+  }
+
+  .clock3d {
+    width: min(260px, 80vw);
+  }
+
+  .scroll-indicator {
+    right: 12px;
+    bottom: 20px;
+  }
+
+  .scroll-text-container {
+    width: 90px;
+    height: 90px;
+  }
+
+  .ocean {
+    padding: 3rem 5vw;
+  }
+
+  .typed-wrap {
+    font-size: 0.9rem;
+    min-height: 140px;
+  }
+
+  .bubble-grid {
+    max-width: 100%;
+  }
+
+  .footprint-section {
+    padding: 4rem 5vw;
+    gap: 1.5rem;
+  }
+
+  .footprint-instructions {
+    font-size: 0.9rem;
+  }
+
+  #globeContainer {
+    height: 260px;
+  }
+
+  .benchmark-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-container {
+    grid-template-columns: 1fr;
+  }
+
+  .big-stat {
+    font-size: 2.2rem;
+  }
+
+  .live-grid-section {
+    padding: 4rem 5vw;
+  }
+
+  .grid-header {
+    flex-wrap: wrap;
+    gap: 0.7rem;
+  }
+
 }
   </style>
 </head>
@@ -897,6 +936,7 @@ body.low-carbon .waves {
     const footprintTitle = document.getElementById('footprintTitle');
     const footprintInstructions = document.getElementById('footprintInstructions');
 
+    // Instruction message
     const instructionMsg = "Enter your weekly mileage, monthly energy usage, and annual flights. Our algorithm will calculate your metric tonnage and visualize the atmospheric load on the simulation globe.";
     let instPointer = 0;
     let instStarted = false;
@@ -929,6 +969,7 @@ body.low-carbon .waves {
       const titleTrigger = footprintTitle.getBoundingClientRect().top;
       if (titleTrigger < window.innerHeight * 0.8) {
         footprintTitle.classList.add('show');
+        // Trigger the instructions typing only once
         if(!instStarted) {
             instStarted = true;
             typeInstructions();
@@ -1014,17 +1055,21 @@ document.getElementById('estimateBtn').addEventListener('click', () => {
   const electricity = Number(document.getElementById('electricity').value) || 0;
   const flights = Number(document.getElementById('flights').value) || 0;
 
+  // Calculate Tons
   const tons = (miles * 0.000404 * 52) + (electricity * 0.000387 * 12) + (flights * 0.24);
   
+  // Show the UI elements
   document.getElementById('estimateResult').textContent = `Estimated annual impact: ${tons.toFixed(2)} metric tons CO₂e`;
   const gaugeCont = document.getElementById('gaugeContainer');
   gaugeCont.style.display = 'block';
 
+  // Calculate Bar Percentage (Relative to a 20-ton "Heavy" scale)
   const maxScale = 20; 
   const percentage = Math.min((tons / maxScale) * 100, 100);
   const fill = document.getElementById('gaugeFill');
   fill.style.width = `${percentage}%`;
 
+  // Dynamic Feedback Logic
   const status = document.getElementById('statusText');
   const message = document.getElementById('feedbackMessage');
   
@@ -1047,6 +1092,7 @@ document.getElementById('estimateBtn').addEventListener('click', () => {
 
   document.getElementById('percentageText').textContent = `${Math.round(percentage)}% LOAD`;
 
+  // Globe Visual Updates
   const intensity = Math.min(1, tons / 25);
   glowLayer.material.opacity = 0.08 + intensity * 0.65;
   smog.material.opacity = 0.06 + intensity * 0.35;
@@ -1057,14 +1103,15 @@ document.getElementById('estimateBtn').addEventListener('click', () => {
 carbonToggle.addEventListener('change', () => {
   if (carbonToggle.checked) {
     document.body.classList.add('low-carbon');
+    // Optional: Slow down Three.js rotations if you have them
     console.log("Low Carbon Mode: Active");
   } else {
     document.body.classList.remove('low-carbon');
     console.log("Low Carbon Mode: Inactive");
   }
 });
-//  API Configuration
-const API_KEY = 'C2uGNhpemIS5ZOAk3J42'; 
+// 1. API Configuration
+const API_KEY = 'C2uGNhpemIS5ZOAk3J42'; // Your Electricity Maps Sandbox Key
 const ZONE = 'US'; 
 
 async function fetchLiveGridData() {
@@ -1073,6 +1120,7 @@ async function fetchLiveGridData() {
     const gridTip = document.getElementById('gridTip');
 
     try {
+        // 2. The Fetch Request (using v3 Latest endpoint)
         const response = await fetch(`https://api.electricitymaps.com/v3/carbon-intensity/latest?zone=${ZONE}`, {
             method: 'GET',
             headers: {
@@ -1084,25 +1132,29 @@ async function fetchLiveGridData() {
 
         const data = await response.json();
         
+        // 3. Extract the intensity value
         const intensity = Math.round(data.carbonIntensity);
 
+        // 4. Update the Main Stat
         intensityVal.innerHTML = `${intensity} <span class="unit">gCO₂/kWh</span>`;
         
+        // 5. Calculate Visuals (Mapping 0-700g to 0-100%)
         const percent = Math.min((intensity / 700) * 100, 100);
         intensityFill.style.width = `${percent}%`;
 
+        // 6. Dynamic Logic for Colors & Tips
         let color, message, statusText;
 
         if (intensity < 200) {
-            color = "#00ff88"; 
+            color = "#00ff88"; // Neon Green
             message = "Grid is powered by renewables. High-energy tasks are optimized.";
             statusText = "OPTIMAL";
         } else if (intensity < 450) {
-            color = "#ffcc00"; 
+            color = "#ffcc00"; // Caution Yellow
             message = "Mixed grid sources. Standard efficiency protocols active.";
             statusText = "MODERATE";
         } else {
-            color = "#ff4444";
+            color = "#ff4444"; // Alert Red
             message = "High carbon intensity detected. Postpone heavy loads.";
             statusText = "DELAY";
         }
@@ -1118,7 +1170,6 @@ async function fetchLiveGridData() {
 
     } catch (error) {
         console.error("Grid API Error:", error);
-        // Fallback UI 
         intensityVal.innerText = "OFFLINE";
         gridTip.innerText = "Reconnecting to global grid sensors...";
         gridTip.style.color = "#ff4444";
